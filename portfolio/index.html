@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anshu Sharma — MERN Stack Developer</title>
+<style>
+  :root{
+    --bg: #0a0e14;
+    --bg-raised: #10151d;
+    --line: #1e2733;
+    --text: #e8edf2;
+    --text-dim: #8b98a8;
+    --accent: #4fd1e5;
+    --accent-dim: #2a5a63;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--accent-dim);color:var(--text);}
+
+  /* subtle grid texture on body */
+  body::before{
+    content:'';
+    position:fixed;inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:0.15;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+
+  /* NAV */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(10,14,20,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 0;
+  }
+  .logo{
+    font-family:var(--mono);
+    font-size:15px;
+    color:var(--text);
+    display:flex;align-items:center;gap:10px;
+  }
+  .logo .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);}
+  .nav-links{display:flex;gap:32px;font-size:14px;color:var(--text-dim);}
+  .nav-links a{transition:color .2s;}
+  .nav-links a:hover{color:var(--accent);}
+  .resume-btn{
+    font-size:13px;padding:8px 16px;
+    border:1px solid var(--accent-dim);
+    border-radius:4px;
+    color:var(--accent);
+    transition:all .2s;
+    font-family:var(--mono);
+  }
+  .resume-btn:hover{background:var(--accent-dim);border-color:var(--accent);}
+  .mobile-toggle{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;}
+
+  /* HERO */
+  .hero{
+    padding:120px 0 100px;
+    border-bottom:1px solid var(--line);
+  }
+  .status{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:12px;color:var(--accent);
+    border:1px solid var(--accent-dim);
+    padding:5px 12px;border-radius:100px;
+    margin-bottom:28px;
+  }
+  .status .ping{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+  h1{
+    font-size:clamp(2.4rem,6vw,4.2rem);
+    font-weight:700;
+    letter-spacing:-0.03em;
+    line-height:1.05;
+    margin-bottom:20px;
+  }
+  h1 .accent{color:var(--accent);}
+  .role-line{
+    font-family:var(--mono);
+    font-size:clamp(1rem,2.2vw,1.3rem);
+    color:var(--text-dim);
+    margin-bottom:28px;
+  }
+  .role-line .sep{color:var(--accent);margin:0 10px;}
+  .hero-desc{
+    max-width:540px;
+    color:var(--text-dim);
+    font-size:16px;
+    margin-bottom:40px;
+  }
+  .hero-actions{display:flex;gap:16px;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--accent);color:#04191d;
+    padding:13px 26px;border-radius:4px;
+    font-weight:600;font-size:14px;
+    transition:transform .15s, box-shadow .15s;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(79,209,229,0.25);}
+  .btn-outline{
+    border:1px solid var(--line);color:var(--text);
+    padding:13px 26px;border-radius:4px;
+    font-size:14px;font-weight:500;
+    transition:border-color .2s, color .2s;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* SECTION shared */
+  section{padding:80px 0;border-bottom:1px solid var(--line);}
+  .section-tag{
+    font-family:var(--mono);font-size:12px;color:var(--accent);
+    margin-bottom:10px;
+  }
+  .section-title{
+    font-size:clamp(1.6rem,3.5vw,2.2rem);
+    font-weight:700;letter-spacing:-0.02em;
+    margin-bottom:40px;
+  }
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;}
+  .about-text p{color:var(--text-dim);margin-bottom:16px;font-size:15.5px;}
+  .about-text strong{color:var(--text);font-weight:600;}
+  .info-card{
+    background:var(--bg-raised);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:24px;
+  }
+  .info-row{
+    display:flex;justify-content:space-between;
+    padding:12px 0;border-bottom:1px solid var(--line);
+    font-size:14px;
+  }
+  .info-row:last-child{border-bottom:none;padding-bottom:0;}
+  .info-row:first-child{padding-top:0;}
+  .info-label{color:var(--text-dim);}
+  .info-val{color:var(--text);font-weight:500;text-align:right;}
+  .cgpa{color:var(--accent);font-family:var(--mono);font-weight:700;}
+
+  /* SKILLS */
+  .skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .skill-block{background:var(--bg-raised);padding:26px;}
+  .skill-block h3{
+    font-family:var(--mono);font-size:13px;color:var(--accent);
+    margin-bottom:16px;text-transform:none;
+  }
+  .skill-tags{display:flex;flex-wrap:wrap;gap:8px;}
+  .skill-tag{
+    font-size:13px;color:var(--text-dim);
+    border:1px solid var(--line);
+    padding:5px 12px;border-radius:100px;
+    transition:border-color .2s,color .2s;
+  }
+  .skill-tag:hover{border-color:var(--accent-dim);color:var(--text);}
+
+  /* PROJECTS */
+  .projects-list{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .project-row{
+    position:relative;
+    background:var(--bg-raised);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:32px 28px 28px;
+    overflow:hidden;
+    transition:border-color .25s, transform .25s;
+  }
+  .project-row::before{
+    content:'';
+    position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity:0;transition:opacity .25s;
+  }
+  .project-row:hover{border-color:var(--accent-dim);transform:translateY(-4px);}
+  .project-row:hover::before{opacity:1;}
+  .project-index{
+    font-family:var(--mono);font-size:12px;color:var(--accent);
+    opacity:.7;margin-bottom:18px;display:block;
+  }
+  .project-name{font-size:19px;font-weight:600;margin-bottom:10px;}
+  .project-desc{color:var(--text-dim);font-size:14.5px;margin-bottom:20px;min-height:66px;}
+  .project-stack{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;}
+  .stack-chip{
+    font-family:var(--mono);font-size:11px;color:var(--accent);
+    background:var(--accent-dim);
+    padding:3px 9px;border-radius:3px;
+  }
+  .project-links{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:16px;}
+  .project-links a{font-size:13px;color:var(--text-dim);transition:color .2s;}
+  .project-links a:hover{color:var(--accent);}
+  .soon-tag{
+    font-size:12px;color:var(--text-dim);
+    border:1px dashed var(--line);
+    padding:4px 10px;border-radius:100px;
+  }
+
+  /* CONTACT */
+  .contact-wrap{text-align:left;}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;}
+  .contact-links{display:flex;flex-direction:column;gap:18px;margin-top:24px;}
+  .contact-link{
+    display:flex;align-items:center;gap:14px;
+    font-size:15px;color:var(--text);
+    padding:14px 18px;
+    border:1px solid var(--line);border-radius:6px;
+    transition:border-color .2s,transform .15s;
+  }
+  .contact-link:hover{border-color:var(--accent);transform:translateX(4px);}
+  .icon-box{
+    width:32px;height:32px;border-radius:6px;
+    background:var(--accent-dim);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);color:var(--accent);font-size:13px;flex-shrink:0;
+  }
+  form{display:flex;flex-direction:column;gap:14px;}
+  input,textarea{
+    background:var(--bg-raised);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:13px 16px;
+    color:var(--text);
+    font-family:var(--sans);
+    font-size:14px;
+    resize:none;
+  }
+  input:focus,textarea:focus{outline:none;border-color:var(--accent);}
+  input::placeholder,textarea::placeholder{color:var(--text-dim);}
+  .form-submit{
+    background:var(--accent);color:#04191d;
+    padding:13px;border-radius:6px;border:none;
+    font-weight:600;font-size:14px;cursor:pointer;
+    font-family:var(--sans);
+  }
+
+  footer{padding:32px 0;text-align:center;}
+  footer p{color:var(--text-dim);font-size:13px;font-family:var(--mono);}
+
+  @media(max-width:760px){
+    .nav-links{display:none;}
+    .about-grid,.contact-grid{grid-template-columns:1fr;gap:32px;}
+    .skills-grid{grid-template-columns:1fr;}
+    .projects-list{grid-template-columns:1fr;}
+    .hero{padding:90px 0 60px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <div class="logo"><span class="dot"></span>anshu.dev</div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a href="resume.pdf" download="Anshu_Sharma_Resume.pdf" class="resume-btn">↓ resume.pdf</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="status"><span class="ping"></span> Open to opportunities</div>
+    <h1>Anshu Sharma</h1>
+    <div class="role-line">MERN Stack Developer<span class="sep">/</span>DSA Enthusiast</div>
+    <p class="hero-desc">Final-year BCA student building full-stack web applications with the MERN stack, and sharpening problem-solving through Data Structures & Algorithms in Java.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">View Projects →</a>
+      <a href="#contact" class="btn-outline">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-tag">01 — About</div>
+    <h2 class="section-title">Who I am</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm a <strong>BCA student</strong> (2024–2027) at IB PG College, affiliated with Kurukshetra University, currently based in <strong>Panipat, Haryana</strong>.</p>
+        <p>I build full-stack applications using the MERN stack — from database schemas to polished, responsive interfaces — and enjoy the analytical side of software just as much: working through Data Structures & Algorithms problems in Java to strengthen how I think about efficiency and structure.</p>
+        <p>I'm currently preparing for placements and looking for opportunities as a MERN Stack or Java/DSA developer.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-row"><span class="info-label">Degree</span><span class="info-val">BCA</span></div>
+        <div class="info-row"><span class="info-label">Batch</span><span class="info-val">2024 – 2027</span></div>
+        <div class="info-row"><span class="info-label">College</span><span class="info-val">IB PG College</span></div>
+        <div class="info-row"><span class="info-label">University</span><span class="info-val">Kurukshetra University</span></div>
+        <div class="info-row"><span class="info-label">CGPA</span><span class="info-val cgpa">9.40 / 10</span></div>
+        <div class="info-row"><span class="info-label">Location</span><span class="info-val">Panipat, Haryana</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="section-tag">02 — Skills</div>
+    <h2 class="section-title">Tools I work with</h2>
+    <div class="skills-grid">
+      <div class="skill-block">
+        <h3>Frontend</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">React</span>
+          <span class="skill-tag">Redux</span>
+          <span class="skill-tag">Redux Toolkit</span>
+          <span class="skill-tag">HTML5</span>
+          <span class="skill-tag">CSS3</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">Tailwind CSS</span>
+          <span class="skill-tag">Bootstrap</span>
+          <span class="skill-tag">Vite</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h3>Backend</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">Express.js</span>
+          <span class="skill-tag">MongoDB</span>
+          <span class="skill-tag">Mongoose</span>
+          <span class="skill-tag">JWT Auth</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h3>Languages & CS</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Java</span>
+          <span class="skill-tag">DSA</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h3>Tools</h3>
+        <div class="skill-tags">
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">GitHub</span>
+          <span class="skill-tag">Postman</span>
+          <span class="skill-tag">VS Code</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="section-tag">03 — Projects</div>
+    <h2 class="section-title">Things I've built</h2>
+    <div class="projects-list">
+
+      <div class="project-row">
+        <span class="project-index">// project_01</span>
+        <div>
+          <div class="project-name">Campus Job Portal</div>
+          <div class="project-desc">A MERN placement portal with separate student and company/admin roles — job postings, applications, and status tracking, secured with JWT authentication.</div>
+          <div class="project-stack">
+            <span class="stack-chip">MongoDB</span><span class="stack-chip">Express</span><span class="stack-chip">React</span><span class="stack-chip">Node.js</span><span class="stack-chip">JWT</span>
+          </div>
+        </div>
+        <div class="project-links">
+          <span class="soon-tag">Code coming soon</span>
+          <a href="https://github.com/anshu-sharma603" target="_blank">GitHub Profile →</a>
+        </div>
+      </div>
+
+      <div class="project-row">
+        <span class="project-index">// project_02</span>
+        <div>
+          <div class="project-name">Tomato</div>
+          <div class="project-desc">A MERN-based food delivery web app with JWT authentication — browsing, cart and order flow built end-to-end.</div>
+          <div class="project-stack">
+            <span class="stack-chip">MongoDB</span><span class="stack-chip">Express</span><span class="stack-chip">React</span><span class="stack-chip">Node.js</span><span class="stack-chip">JWT</span>
+          </div>
+        </div>
+        <div class="project-links">
+          <span class="soon-tag">Code coming soon</span>
+          <a href="https://github.com/anshu-sharma603" target="_blank">GitHub Profile →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="border-bottom:none;">
+  <div class="wrap contact-wrap">
+    <div class="section-tag">04 — Contact</div>
+    <h2 class="section-title">Let's talk</h2>
+    <div class="contact-grid">
+      <div>
+        <p style="color:var(--text-dim);font-size:15px;max-width:400px;">Open to internship and full-time opportunities as a MERN stack or Java/DSA developer. Reach out directly or send a message.</p>
+        <div class="contact-links">
+          <a href="mailto:anshusharma8981@gmail.com" class="contact-link">
+            <span class="icon-box">@</span> anshusharma8981@gmail.com
+          </a>
+          <a href="https://github.com/anshu-sharma603" target="_blank" class="contact-link">
+            <span class="icon-box">GH</span> github.com/anshu-sharma603
+          </a>
+          <a href="https://linkedin.com/in/anshu-sharma-67a58b343" target="_blank" class="contact-link">
+            <span class="icon-box">in</span> linkedin.com/in/anshu-sharma
+          </a>
+        </div>
+      </div>
+      <form onsubmit="event.preventDefault(); alert('Message received — thanks! (demo form, not wired to a backend yet)');">
+        <input type="text" placeholder="Your name" required>
+        <input type="email" placeholder="Your email" required>
+        <textarea rows="4" placeholder="Your message" required></textarea>
+        <button type="submit" class="form-submit">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>designed & built by Anshu Sharma</p>
+  </div>
+</footer>
+
+</body>
+</html>
